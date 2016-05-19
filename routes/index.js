@@ -13,11 +13,12 @@ router.get('/', function(req, res, next) {
   var err;
   if(url){
     var rg_protocol = new RegExp("(http|https):\\/\\/");
-    if(!(rg_protocol.test(url))){
+    var url_regex = /([a-zA-Z0-9.-]+(:[a-zA-Z0-9.&%$-]+)*@)*((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9][0-9]?)(\.(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])){3}|([a-zA-Z0-9-]+\.)*[a-zA-Z0-9-]+\.(com|edu|gov|int|mil|net|org|biz|arpa|info|name|pro|aero|coop|museum|[a-zA-Z]{2}))(:[0-9]+)*(\/($|[a-zA-Z0-9.,?'\\+&%$#=~_-]+))*$/;
+    if(!(rg_protocol.test(url))&&(url_regex.test(url))){
       url = "http://"+url;
       console.log(url);
     }
-    if(isVal.isUri(url)) {
+    if(isVal.is_web_uri(url)) {
       console.log("Получен Url: " + url);
       request(url, {timeout: 2000}, function (error, response, body) {
         if (!error) {
