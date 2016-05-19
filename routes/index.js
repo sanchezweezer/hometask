@@ -10,6 +10,7 @@ var url;
 /* GET home page. */
 router.get('/', function(req, res, next) {
   url = req.query['url'];
+  var err;
   if(url){
     var rg_protocol = new RegExp("(http|https):\\/\\/");
     if(!(rg_protocol.test(url))){
@@ -22,11 +23,11 @@ router.get('/', function(req, res, next) {
         if (!error) {
           console.log(response.statusCode);
           if (200 <= response.statusCode && response.statusCode < 300) {
-            res.render('index', {status: "Success", body_of_page: response.headers.location});
+            res.render('index', {status: "Success", body_of_page: body});
             console.log(response.headers.location);
           } else {
             if (300 <= response.statusCode && response.statusCode < 400) {
-              res.render('index', {status: "Redirect", body_of_page: body});
+              res.render('index', {status: "Redirect", body_of_page: response.headers.location});
             } else {
               res.render('index', {status: response.statusCode + " " + response.statusMessage, body_of_page: null});
             }
@@ -37,15 +38,16 @@ router.get('/', function(req, res, next) {
         }
       });
     }else{
-      var err = new Error('Invalid Uri "'+ url +'"');
+      err = new Error('Invalid Uri "'+ url +'"');
       err.status = 400;
       throw err;
     }
   }else{
-    var err = new Error('Bad Request');
+    err = new Error('Bad Request');
     err.status = 400;
     throw err;
   }
+  next();
 });
 
 module.exports = router;
