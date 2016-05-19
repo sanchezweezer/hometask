@@ -42,12 +42,11 @@ router.get('/', function(req, res, next) {
       err.status = 400;
       throw err;
     }
-  }else{
+  }else {
     err = new Error('Bad Request');
     err.status = 400;
     throw err;
   }
-  next();
 });
 
 module.exports = router;
